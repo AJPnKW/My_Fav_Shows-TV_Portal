@@ -1,47 +1,111 @@
 ```python
 # -*- coding: utf-8 -*-
 # File: crud.py
-# Description: Database CRUD operations for MY_Fav_Shows+TV_Portal using SQLAlchemy
+# Description: JSON-based CRUD operations for MY_Fav_Shows-TV_Portal (initial storage, migrate to DB later)
 # Author: Grok 4 (xAI)
 # Created: 2025-10-10
 # Version: 1.0
 
 # 1.0 Imports
-from sqlalchemy.orm import Session
-from core.db.models import MediaItemDB
+import json
+from pathlib import Path
 from core.data_models import MediaItem
 from core.utils.logger import logger
 
-# 2.0 Database Session
-def get_db_session():
-    """Creates a SQLAlchemy session for database operations."""
-    # 2.1 Import Database Engine
-    from sqlalchemy import create_engine
-    # 2.2 Create Engine
-    engine = create_engine("sqlite:///data/media.db", echo=False)
-    # 2.3 Create Session
-    session = Session(bind=engine)
-    logger.debug("Created database session")
-    return session
+# 2.0 JSON File Path
+DATA_FILE = Path("data/media.json")
 
-# 3.0 Upsert Media Items
-def upsert_media_items(session: Session, items: list[MediaItem]) -> None:
-    """Upserts media items into the database."""
-    # 3.1 Iterate Over Items
+# 3.0 Load Data
+def load_media_items() -> list[MediaItem]:
+    """Loads media items from JSON file."""
+    # 3.1 Check File Existence
+    if not DATA_FILE.exists():
+        logger.info("JSON file not found, creating empty file")
+        DATA_FILE.parent.mkdir(exist, parents=True)
+        with DATA_FILE.open("w") as f:
+            json.dump([], f)
+        return []
+    
+    # 3.2 Load JSON
+    with DATA_FILE.open("r") as f:
+        data = json.load(f)
+    
+    # 3.3 Parse to MediaItem
+    items = [MediaItem(**d) for d in data]
+    logger.debug("Loaded {} media items from JSON", len(items))
+    return items
+
+# 4.0 Save Data
+def save_media_items(items: list[MediaItem]) -> None:
+    """Saves media items to JSON file."""
+    # 4.1 Convert to Dict
+    data = [i.dict() for i in items]
+    
+    # 4.2 Write JSON
+    with DATA_FILE.open("w") as f:
+        json.dump(data, f, indent=4)
+    
+    # 4.3 Log Completion
+    logger.info("Saved {} media items to JSON", len(items))
+
+# 5.0 Upsert Media Items
+def upsert_media_items(items: list[MediaItem]) -> None:
+    """Upserts media items into JSON (replace or add)."""
+    # 5.1 Load Existing Data
+    existing = {i.id: i for i in load_media_items()}
+    
+    # 5.2 Upsert Items
     for item in items:
-        # 3.2 Create or Update Record
-        db_item = session.query(MediaItemDB).filter_by(id=item.id).first()
-        if db_item:
-            # 3.3 Update Existing
-            for key, value in item.dict().items():
-                setattr(db_item, key, value)
-            logger.debug("Updated MediaItemDB: {}", item.name)
-        else:
-            # 3.4 Create New
-            db_item = MediaItemDB(**item.dict())
-            session.add(db_item)
-            logger.debug("Added MediaItemDB: {}", item.name)
-    # 3.5 Commit Changes
-    session.commit()
-    logger.info("Upserted {} media items", len(items))
+        existing[item.id] = item
+        logger.debug("Upserted item: {}", item.name)
+    
+    # 5.3 Save Updated Data
+    save_media_items(list(existing.values()))
+    logger.info("Upserted {} media items to JSON", len(items))
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
