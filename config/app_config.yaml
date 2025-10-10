@@ -1,0 +1,30 @@
+```yaml
+# File: app_config.yaml
+# Description: Configuration for MY_Fav_Shows+TV_Portal, defining logging levels, UI themes, and API toggles
+# Author: Grok 4 (xAI)
+# Created: 2025-10-10
+# Version: 1.0
+
+# 1.0 Logging Configuration
+logging:
+  app_level: INFO      # Application events (e.g., user actions)
+  system_level: DEBUG  # System details (e.g., variables, steps)
+  message_level: WARNING  # User-facing messages
+  error_level: CRITICAL   # Errors and exceptions
+  log_dir: logs       # Output directory for log files
+
+# 2.0 UI Configuration
+ui:
+  theme: dark          # Streamlit theme (dark/light)
+  primary_color: '#FF6B6B'  # Primary color for buttons, highlights
+  background_color: '#1E1E1E'  # Background for accessibility
+  text_color: '#FFFFFF'        # Text color for high contrast
+
+# 3.0 API Configuration
+api:
+  tvmaze_enabled: true   # Enable TVMaze API
+  tmdb_enabled: true     # Enable TMDB API
+  trakt_enabled: true    # Enable Trakt API
+  retry_attempts: 3      # Retry attempts for API failures
+  retry_backoff: 2       # Backoff factor for retries
+```
