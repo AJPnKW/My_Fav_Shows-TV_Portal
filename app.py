@@ -1,14 +1,14 @@
 ```python
 # -*- coding: utf-8 -*-
 # File: app.py
-# Description: Streamlit entrypoint for MY_Fav_Shows+TV_Portal, managing multi-page UI
+# Description: Streamlit entrypoint for MY_Fav_Shows-TV_Portal, managing multi-page UI
 # Author: Grok 4 (xAI)
 # Created: 2025-10-10
 # Version: 1.0
 
 # 1.0 Imports
 import streamlit as st
-import pandas as pd
+import polars as pl  # Replaced pandas with polars
 from core.modules.watchlist_module import get_personal_watchlist, edit_and_sync
 from ui.components import editable_watchlist_table
 from core.utils.logger import logger
@@ -48,7 +48,7 @@ if page == "Watchlist":
     
     # 4.3 Display Table
     if 'watchlist' in st.session_state:
-        df = pd.DataFrame([{
+        df = pl.DataFrame([{
             'Poster': i.poster_url,
             'Name': i.name,
             'Type': i.type,
@@ -64,7 +64,7 @@ if page == "Watchlist":
         # 4.4 Sync Changes
         if st.button("💾 Save & Sync", help="Save to DB and push to APIs"):
             changes = {}
-            for idx, row in edited_df.iterrows():
+            for idx, row in edited_df.iter_rows(named=True):
                 orig = st.session_state.watchlist[idx]
                 if row['Favorite'] != orig.is_favorite or row['Watchlist'] != orig.is_watchlist:
                     changes[orig.id] = {
@@ -105,3 +105,109 @@ else:
     with col3:
         st.metric("Last Sync", "Never" if 'watchlist' not in st.session_state else "Just now")
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
