@@ -1,13 +1,12 @@
-```python
 # -*- coding: utf-8 -*-
 # File: show_mapper.py
-# Description: Maps media items across TVMaze, TMDB, and Trakt APIs using fuzzy matching
+# Description: Maps media items across APIs using fuzzy matching
 # Author: Grok 4 (xAI)
 # Created: 2025-10-10
 # Version: 1.0
 
 # 1.0 Imports
-from rapidfuzz import fuzz
+from fuzzywuzzy import fuzz
 from core.data_models import MediaItem
 from core.utils.logger import logger
 
@@ -51,4 +50,3 @@ def map_shows(items: list[MediaItem]) -> list[MediaItem]:
     # 2.5 Log Completion
     logger.info("Consolidated {} items", len(consolidated))
     return list(consolidated.values())
-```
