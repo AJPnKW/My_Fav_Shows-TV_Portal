@@ -67,3 +67,37 @@ def editable_watchlist_table(df: pl.DataFrame) -> pl.DataFrame:
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
